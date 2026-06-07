@@ -10,6 +10,10 @@
   --term-border: rgba(74, 246, 38, 0.15);
   --term-border-hover: rgba(74, 246, 38, 0.35);
   --term-font: 'Courier New', Courier, monospace;
+  --term-text: #e2e8f0;
+  --term-text-bright: #ffffff;
+  --term-header-bg: rgba(15, 23, 42, 0.8);
+  --term-input-bg: rgba(5, 8, 16, 0.5);
 }
 
 /* --- Floating Terminal Toggle Button --- */
@@ -82,7 +86,7 @@
 
 /* --- Terminal Title Bar --- */
 .terminal-header {
-  background: rgba(15, 23, 42, 0.8);
+  background: var(--term-header-bg);
   padding: 12px 16px;
   display: flex;
   align-items: center;
@@ -128,7 +132,7 @@
   gap: 12px;
   font-size: 0.82rem;
   line-height: 1.5;
-  color: #e2e8f0;
+  color: var(--term-text);
   scrollbar-width: thin;
   scrollbar-color: rgba(74, 246, 38, 0.2) transparent;
 }
@@ -160,7 +164,7 @@
 }
 
 .terminal-command-echo {
-  color: #fff;
+  color: var(--term-text-bright);
   font-weight: 500;
 }
 
@@ -180,7 +184,7 @@
 .terminal-input-wrapper {
   display: flex;
   align-items: center;
-  background: rgba(5, 8, 16, 0.5);
+  background: var(--term-input-bg);
   padding: 12px 16px;
   border-top: 1px solid rgba(255, 255, 255, 0.05);
 }
@@ -197,7 +201,7 @@
   background: transparent;
   border: none;
   outline: none;
-  color: #fff;
+  color: var(--term-text-bright);
   font-family: var(--term-font);
   font-size: 0.82rem;
   padding: 0;

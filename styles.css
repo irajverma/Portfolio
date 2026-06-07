@@ -428,6 +428,15 @@ img {
   --gradient-navy: linear-gradient(180deg, #0a1f1a 0%, #153d30 100%);
   --gradient-card: linear-gradient(145deg, rgba(10, 31, 26, 0.7), rgba(21, 61, 48, 0.4));
   --gradient-hero: radial-gradient(ellipse at 50% 0%, rgba(16, 185, 129, 0.08) 0%, transparent 60%);
+
+  /* Terminal Override */
+  --term-green: #10b981;
+  --term-green-dim: #059669;
+  --term-bg: rgba(10, 31, 26, 0.95);
+  --term-border: rgba(16, 185, 129, 0.15);
+  --term-border-hover: rgba(16, 185, 129, 0.35);
+  --term-header-bg: rgba(5, 15, 12, 0.85);
+  --term-input-bg: rgba(5, 12, 10, 0.5);
 }
 
 /* ── Dark Purple ──────────────────────────────────────── */
@@ -456,6 +465,15 @@ img {
   --gradient-navy: linear-gradient(180deg, #1a0a2e 0%, #2d1650 100%);
   --gradient-card: linear-gradient(145deg, rgba(26, 10, 46, 0.7), rgba(45, 22, 80, 0.4));
   --gradient-hero: radial-gradient(ellipse at 50% 0%, rgba(168, 85, 247, 0.08) 0%, transparent 60%);
+
+  /* Terminal Override */
+  --term-green: #a855f7;
+  --term-green-dim: #7e22ce;
+  --term-bg: rgba(26, 10, 46, 0.95);
+  --term-border: rgba(168, 85, 247, 0.15);
+  --term-border-hover: rgba(168, 85, 247, 0.35);
+  --term-header-bg: rgba(15, 5, 25, 0.85);
+  --term-input-bg: rgba(10, 3, 18, 0.5);
 }
 
 /* ── Light Mode ───────────────────────────────────────── */
@@ -487,6 +505,17 @@ img {
   --gradient-navy: linear-gradient(180deg, #f8fafc 0%, #e2e8f0 100%);
   --gradient-card: linear-gradient(145deg, rgba(255, 255, 255, 0.8), rgba(241, 245, 249, 0.5));
   --gradient-hero: radial-gradient(ellipse at 50% 0%, rgba(37, 99, 235, 0.06) 0%, transparent 60%);
+
+  /* Terminal Override */
+  --term-green: #2563eb;
+  --term-green-dim: #1d4ed8;
+  --term-bg: rgba(248, 250, 252, 0.95);
+  --term-border: rgba(37, 99, 235, 0.15);
+  --term-border-hover: rgba(37, 99, 235, 0.35);
+  --term-text: #334155;
+  --term-text-bright: #0f172a;
+  --term-header-bg: rgba(226, 232, 240, 0.85);
+  --term-input-bg: rgba(241, 245, 249, 0.5);
 }
 
 [data-theme="light-mode"] .navbar.scrolled {
