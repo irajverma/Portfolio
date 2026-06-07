@@ -146,15 +146,16 @@ document.addEventListener('DOMContentLoaded', () => {
   if (achievementsSection) statsObserver.observe(achievementsSection);
 
 
-  // ── 7. CERTIFICATE MODAL (Lightbox) ──────────────────
+  // ── 7. CERTIFICATE & ACHIEVEMENT LIGHTBOX MODAL ──────
   const certModal = document.getElementById('certModal');
   const modalImg = document.getElementById('modalImg');
   const modalClose = document.getElementById('modalClose');
-  const certCards = document.querySelectorAll('.cert-card');
+  const zoomableCards = document.querySelectorAll('.cert-card, .achievement-card');
 
-  certCards.forEach(card => {
+  zoomableCards.forEach(card => {
     card.addEventListener('click', () => {
-      const imgSrc = card.querySelector('.cert-image-wrapper img')?.src;
+      const img = card.querySelector('.cert-image-wrapper img, .achievement-image img');
+      const imgSrc = img?.src;
       if (imgSrc) {
         modalImg.src = imgSrc;
         certModal.classList.add('active');

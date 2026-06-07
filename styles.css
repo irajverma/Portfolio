@@ -1475,6 +1475,7 @@ img {
 .achievement-card {
   overflow: hidden;
   position: relative;
+  cursor: pointer;
 }
 
 .achievement-image {
