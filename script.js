@@ -688,8 +688,8 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       if (q === 'projects' || q === 'cat projects.txt') {
         return `My Featured Projects:<br>
-        1. <span class="highlight">Wave Academy:</span> Full-stack school portal serving 1500+ students using Supabase + Firebase.<br>
-        2. <span class="highlight">Code Reviewer AI:</span> Automated architecture and security reviewer powered by Google Gemini API.`;
+        1. <span class="highlight">Wave Academy:</span> Full-stack school portal serving 1500+ students. Deployed at: <a href="https://wave-academy-jet.vercel.app/" target="_blank" style="color: var(--gold-300); text-decoration: underline;">wave-academy-jet.vercel.app</a><br>
+        2. <span class="highlight">Code Reviewer AI:</span> Automated architecture and security reviewer powered by Google Gemini API. Deployed at: <a href="https://ai-power-code-reviewer-raj-verma.vercel.app/" target="_blank" style="color: var(--gold-300); text-decoration: underline;">ai-power-code-reviewer-raj-verma.vercel.app</a>`;
       }
       if (q === 'contact' || q === 'cat contact.txt') {
         return `My Contact Channels:<br>
@@ -768,8 +768,8 @@ document.addEventListener('DOMContentLoaded', () => {
           id: 'projects',
           triggers: ['project', 'projects', 'build', 'wave', 'academy', 'code', 'reviewer', 'ai', 'supabase', 'firebase', 'gemini'],
           response: `My Featured Projects:<br>
-          1. <span class="highlight">Wave Academy:</span> School portal serving 1500+ active students (React, TS, Supabase, Firebase).<br>
-          2. <span class="highlight">Code Reviewer AI:</span> Code review tool powered by Google Gemini API.`
+          1. <span class="highlight">Wave Academy:</span> School portal serving 1500+ students. Deployed: <a href="https://wave-academy-jet.vercel.app/" target="_blank" style="color: var(--gold-300); text-decoration: underline;">wave-academy-jet.vercel.app</a><br>
+          2. <span class="highlight">Code Reviewer AI:</span> Code review tool powered by Google Gemini API. Deployed: <a href="https://ai-power-code-reviewer-raj-verma.vercel.app/" target="_blank" style="color: var(--gold-300); text-decoration: underline;">ai-power-code-reviewer-raj-verma.vercel.app</a>`
         },
         {
           id: 'skills',
@@ -860,8 +860,8 @@ Experience:
   * Participated in peer code reviews and technical documentation.
 
 Projects:
-- Wave Academy (May 2026): Full-stack educational portal supporting 1500+ students. Built using React, TypeScript, Supabase (PostgreSQL) for structured data, and Firebase for real-time content. Optimized fetch speed by 40%. Engineered a bulk data processing engine using xlsx library.
-- Code Reviewer AI (Dec 2025): Full-stack AI code reviewer powered by Google Gemini API. Analyzes 1000+ lines per session, reducing review errors by 30%. Built using React and Express.js, supporting 50 concurrent users.
+- Wave Academy (May 2026): Full-stack educational portal supporting 1500+ students. Deployed at: https://wave-academy-jet.vercel.app/ (Built using React, TypeScript, Supabase, and Firebase).
+- Code Reviewer AI (Dec 2025): Full-stack AI code reviewer powered by Google Gemini API. Deployed at: https://ai-power-code-reviewer-raj-verma.vercel.app/ (Built using React and Express.js).
 
 Technical Skills:
 - Languages: Python, Java, C++, JavaScript, HTML, CSS
