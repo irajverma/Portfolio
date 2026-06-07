@@ -725,6 +725,31 @@ document.addEventListener('DOMContentLoaded', () => {
       // Natural language mapping using Jaccard Similarity / overlap
       const intents = [
         {
+          id: 'greeting',
+          triggers: ['hi', 'hello', 'hey', 'greetings', 'hola', 'yo', 'hii', 'hiii', 'sup', 'morning', 'afternoon', 'evening'],
+          response: `Hello! I am Raj's AI Agent. Ask me anything about my education, internship, skills, projects, or leadership, or type <span class="highlight">help</span> for a list of terminal commands!`
+        },
+        {
+          id: 'negation',
+          triggers: ['no', 'nope', 'not', 'never', 'cancel', 'stop', 'nay', 'nothing', 'neither'],
+          response: `Alright! If you have any other questions, feel free to ask, or type <span class="highlight">help</span> for a list of commands.`
+        },
+        {
+          id: 'affirmation',
+          triggers: ['yes', 'yeah', 'yep', 'sure', 'ok', 'okay', 'yup', 'fine', 'cool', 'agree'],
+          response: `Great! What would you like to know about me? You can ask about my education, internship, skills, projects, or leadership.`
+        },
+        {
+          id: 'thanks',
+          triggers: ['thanks', 'thank', 'ty', 'thx', 'awesome', 'perfect', 'grateful', 'appreciate'],
+          response: `You're very welcome! Let me know if there's anything else you'd like to ask.`
+        },
+        {
+          id: 'identity',
+          triggers: ['who', 'you', 'agent', 'bot', 'chatbot', 'name'],
+          response: `I am Raj Verma's Terminal AI Agent. I'm here to help you learn more about Raj's qualifications, skills, and projects!`
+        },
+        {
           id: 'education',
           triggers: ['college', 'university', 'study', 'vit', 'bhopal', 'cgpa', 'gpa', 'grade', 'school', 'degree', 'btech', 'education', 'studying', 'scores'],
           response: `I study at <span class="highlight">VIT Bhopal University</span>. I am pursuing a B.Tech in Computer Science (AI & ML) with a cumulative GPA of <span class="highlight">8.96</span>.`
@@ -800,7 +825,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       // Default intelligent fallback
-      return `AI Agent: I am a B.Tech Computer Science (AI & ML) student and Software Engineering Intern at IIT Bombay. You can ask me about my **education**, **internship**, **skills**, **projects**, or **leadership**!`;
+      return `AI Agent: I'm not fully sure how to answer that in offline mode. Try asking about my **education**, **internship**, **skills**, **projects**, or **leadership**! You can also type <span class="highlight">help</span> to see console commands.`;
     }
 
     // Call Gemini API directly
