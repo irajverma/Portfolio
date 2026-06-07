@@ -14,6 +14,7 @@
   <meta property="og:type" content="website" />
 
   <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="terminal.css" />
 </head>
 <body>
 
@@ -823,6 +824,32 @@
       </div>
     </div>
   </footer>
+
+  <!-- ═══ TERMINAL AI AGENT ═══ -->
+  <button class="terminal-launcher" id="terminalLauncher" aria-label="Open Terminal AI Agent">
+    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+  </button>
+
+  <div class="terminal-container" id="terminalContainer">
+    <div class="terminal-header" id="terminalHeader">
+      <div class="terminal-controls">
+        <span class="terminal-dot close" id="terminalClose"></span>
+        <span class="terminal-dot minimize" id="terminalMinimize"></span>
+        <span class="terminal-dot maximize" id="terminalMaximize"></span>
+      </div>
+      <span class="terminal-title">bash — guest@rajverma</span>
+    </div>
+    <div class="terminal-body" id="terminalBody">
+      <div class="terminal-welcome">
+        <p>Welcome to Raj Verma's Terminal Agent v1.0.0</p>
+        <p>Type <span class="highlight">help</span> to view all commands, or ask any question about Raj.</p>
+      </div>
+    </div>
+    <div class="terminal-input-wrapper">
+      <span class="terminal-input-prefix">guest@rajverma:~$</span>
+      <input type="text" class="terminal-input-field" id="terminalInput" placeholder="Type a command or ask a question..." autocomplete="off" />
+    </div>
+  </div>
 
   <script src="script.js"></script>
 </body>

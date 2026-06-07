@@ -596,4 +596,182 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+
+  // ── 17. TERMINAL AI AGENT INTERACTIVITY ─────────────
+  const terminalLauncher = document.getElementById('terminalLauncher');
+  const terminalContainer = document.getElementById('terminalContainer');
+  const terminalClose = document.getElementById('terminalClose');
+  const terminalMinimize = document.getElementById('terminalMinimize');
+  const terminalInput = document.getElementById('terminalInput');
+  const terminalBody = document.getElementById('terminalBody');
+
+  if (terminalLauncher && terminalContainer && terminalInput && terminalBody) {
+    let commandHistory = [];
+    let historyIndex = -1;
+
+    // Toggle terminal visibility
+    terminalLauncher.addEventListener('click', () => {
+      terminalContainer.classList.toggle('open');
+      if (terminalContainer.classList.contains('open')) {
+        terminalInput.focus();
+      }
+    });
+
+    const closeTerminal = () => {
+      terminalContainer.classList.remove('open');
+    };
+
+    if (terminalClose) terminalClose.addEventListener('click', closeTerminal);
+    if (terminalMinimize) terminalMinimize.addEventListener('click', closeTerminal);
+
+    // Focus input when clicking terminal body
+    terminalBody.addEventListener('click', () => {
+      terminalInput.focus();
+    });
+
+    // Helper to append a line to the terminal
+    function appendTerminalLine(content, className = '') {
+      const line = document.createElement('div');
+      line.className = `terminal-line ${className}`;
+      line.innerHTML = content;
+      terminalBody.appendChild(line);
+      terminalBody.scrollTop = terminalBody.scrollHeight;
+    }
+
+    // AI response database / query engine
+    function getAIResponse(query) {
+      const q = query.toLowerCase().trim();
+
+      // Commands check
+      if (q === 'help') {
+        return `Available terminal commands:<br>
+        - <span class="highlight">ls</span>: List profile text files<br>
+        - <span class="highlight">cat &lt;file&gt;</span>: View file content (e.g., <span class="highlight">cat about.txt</span>)<br>
+        - <span class="highlight">about</span>: Short professional summary<br>
+        - <span class="highlight">skills</span>: List key technologies<br>
+        - <span class="highlight">projects</span>: View featured creations<br>
+        - <span class="highlight">contact</span>: Get contact channels<br>
+        - <span class="highlight">clear</span>: Clear terminal screen`;
+      }
+      if (q === 'ls') {
+        return `about.txt      skills.txt      projects.txt      contact.txt`;
+      }
+      if (q === 'about' || q === 'cat about.txt') {
+        return `<span class="highlight">Raj Verma</span> is a Computer Science (AI & ML) sophomore at VIT Bhopal University. He is currently a Software Engineering Intern at <span class="success">FOSSEE, IIT Bombay</span>, where he engineered the LCCA module for the structural engineering platform Osdag. GPA: 8.96. NCC Air Wing Captain.`;
+      }
+      if (q === 'skills' || q === 'cat skills.txt') {
+        return `Key Technical Skills:<br>
+        - <span class="highlight">Languages:</span> Python, JavaScript, Java, C++, HTML/CSS<br>
+        - <span class="highlight">Frameworks:</span> React, Node.js, Express, FastAPI, PyQt, scikit-learn<br>
+        - <span class="highlight">Cloud/DB:</span> AWS, SQL/SQLite, MongoDB, Supabase, Firebase`;
+      }
+      if (q === 'projects' || q === 'cat projects.txt') {
+        return `Featured Projects:<br>
+        1. <span class="highlight">Wave Academy:</span> Full-stack school portal serving 1500+ students using Supabase + Firebase.<br>
+        2. <span class="highlight">Code Reviewer AI:</span> Automated architecture and security reviewer powered by Google Gemini API.`;
+      }
+      if (q === 'contact' || q === 'cat contact.txt') {
+        return `Contact Channels:<br>
+        - <span class="highlight">Email:</span> i.rajverma8423@gmail.com<br>
+        - <span class="highlight">Phone:</span> +91-9807486339<br>
+        - <span class="highlight">GitHub:</span> github.com/irajverma<br>
+        - <span class="highlight">LinkedIn:</span> linkedin.com/in/raj-verma-459320232`;
+      }
+
+      // Keyword mapping for natural questions
+      if (q.includes('college') || q.includes('university') || q.includes('study') || q.includes('vit') || q.includes('bhopal')) {
+        return `Raj studies at <span class="highlight">VIT Bhopal University</span>. He is pursuing a B.Tech in Computer Science Engineering (specialising in Artificial Intelligence & Machine Learning).`;
+      }
+      if (q.includes('intern') || q.includes('work') || q.includes('experience') || q.includes('iit') || q.includes('bombay') || q.includes('fossee') || q.includes('osdag') || q.includes('lcca')) {
+        return `Raj is a Software Engineering Intern at <span class="success">FOSSEE, IIT Bombay</span>. He works on the Osdag project, where he successfully implemented the Life Cycle Cost Assessment (LCCA) module using Python and SQLite.`;
+      }
+      if (q.includes('hackathon') || q.includes('hackmol') || q.includes('jalandhar') || q.includes('nit')) {
+        return `Raj was a <span class="highlight">Top 10 Finalist</span> at HackMol 6.0, a national-level hackathon at NIT Jalandhar, competing against hundreds of teams.`;
+      }
+      if (q.includes('gpa') || q.includes('cgpa') || q.includes('grade') || q.includes('pointer')) {
+        return `Raj maintains an excellent academic record with a cumulative GPA of <span class="highlight">8.96</span> at VIT Bhopal.`;
+      }
+      if (q.includes('certificate') || q.includes('certifications') || q.includes('credential')) {
+        return `Raj holds credentials including:<br>
+        - <span class="highlight">Google IT Support</span> Professional Certificate<br>
+        - <span class="highlight">MERN Full Stack</span> Certification (Ethnus)<br>
+        - <span class="highlight">Applied Machine Learning in Python</span> (University of Michigan/Coursera)<br>
+        - <span class="highlight">Deloitte Job Simulation</span> Certificate`;
+      }
+      if (q.includes('resume') || q.includes('cv')) {
+        return `You can download Raj's resume directly using the golden <span class="highlight">Download Resume</span> button in the home screen, or access it at <a href="ResumeRajVerma.pdf" download class="highlight">ResumeRajVerma.pdf</a>.`;
+      }
+      if (q.includes('ncc') || q.includes('captain') || q.includes('air wing')) {
+        return `Raj holds the captaincy in the <span class="highlight">NCC Air Wing</span>, showcasing leadership and discipline alongside his engineering skills.`;
+      }
+
+      // Default fallback
+      return `AI Agent: I'm not fully sure about "${query}".<br>
+      Try asking about his <span class="highlight">internship</span>, <span class="highlight">college</span>, <span class="highlight">GPA</span>, <span class="highlight">hackathons</span>, or type <span class="highlight">help</span> to list console commands.`;
+    }
+
+    // Handle command execution
+    function executeCommand(cmdText) {
+      const trimmed = cmdText.trim();
+      if (!trimmed) return;
+
+      // Echo command
+      appendTerminalLine(`<span class="terminal-input-prompt">guest@rajverma:~$</span> <span class="terminal-command-echo">${escapeHtml(trimmed)}</span>`);
+
+      // Add to history
+      commandHistory.push(trimmed);
+      historyIndex = commandHistory.length;
+
+      // Special command: clear
+      if (trimmed.toLowerCase() === 'clear') {
+        terminalBody.innerHTML = '';
+        return;
+      }
+
+      // Simulated processing latency
+      appendTerminalLine(`Processing query...`, 'terminal-response processing-text');
+      const processingLines = terminalBody.querySelectorAll('.processing-text');
+      const lastProcessingLine = processingLines[processingLines.length - 1];
+
+      setTimeout(() => {
+        if (lastProcessingLine) lastProcessingLine.remove();
+        const response = getAIResponse(trimmed);
+        appendTerminalLine(response, 'terminal-response');
+      }, 350 + Math.random() * 200);
+    }
+
+    // Helper to escape HTML tags in echo
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.innerText = text;
+      return div.innerHTML;
+    }
+
+    // Terminal Input Event Listener
+    terminalInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        const val = terminalInput.value;
+        if (val) {
+          executeCommand(val);
+          terminalInput.value = '';
+        }
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        if (commandHistory.length > 0 && historyIndex > 0) {
+          historyIndex--;
+          terminalInput.value = commandHistory[historyIndex];
+        }
+      } else if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        if (commandHistory.length > 0 && historyIndex < commandHistory.length - 1) {
+          historyIndex++;
+          terminalInput.value = commandHistory[historyIndex];
+        } else {
+          historyIndex = commandHistory.length;
+          terminalInput.value = '';
+        }
+      }
+    });
+  }
+
 });

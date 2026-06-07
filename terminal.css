@@ -1,0 +1,219 @@
+/* ══════════════════════════════════════════════════════════
+   RAJ VERMA — TERMINAL AI AGENT STYLES
+   Retro-modern glassmorphic terminal chatbot interface
+   ══════════════════════════════════════════════════════════ */
+
+:root {
+  --term-bg: rgba(10, 15, 30, 0.95);
+  --term-green: #4af626;
+  --term-green-dim: #38b020;
+  --term-border: rgba(74, 246, 38, 0.15);
+  --term-border-hover: rgba(74, 246, 38, 0.35);
+  --term-font: 'Courier New', Courier, monospace;
+}
+
+/* --- Floating Terminal Toggle Button --- */
+.terminal-launcher {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--term-bg);
+  border: 1px solid var(--term-border);
+  color: var(--term-green);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5), 0 0 15px 0 rgba(74, 246, 38, 0.15);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  backdrop-filter: blur(10px);
+}
+
+.terminal-launcher:hover {
+  transform: scale(1.1) translateY(-2px);
+  border-color: var(--term-green);
+  box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.6), 0 0 25px 0 rgba(74, 246, 38, 0.3);
+  color: #fff;
+}
+
+.terminal-launcher svg {
+  width: 24px;
+  height: 24px;
+  transition: transform 0.3s ease;
+}
+
+.terminal-launcher:hover svg {
+  transform: rotate(5deg);
+}
+
+/* --- Terminal Main Container --- */
+.terminal-container {
+  position: fixed;
+  bottom: 96px;
+  right: 24px;
+  width: 400px;
+  height: 480px;
+  background: var(--term-bg);
+  border: 1px solid var(--term-border);
+  border-radius: 12px;
+  box-shadow: 0 12px 48px 0 rgba(0, 0, 0, 0.6), 0 0 30px 0 rgba(74, 246, 38, 0.1);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  z-index: 1000;
+  font-family: var(--term-font);
+  opacity: 0;
+  transform: translateY(20px) scale(0.95);
+  pointer-events: none;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  backdrop-filter: blur(12px);
+}
+
+.terminal-container.open {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: all;
+  border-color: var(--term-border-hover);
+}
+
+/* --- Terminal Title Bar --- */
+.terminal-header {
+  background: rgba(15, 23, 42, 0.8);
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  cursor: grab;
+}
+
+.terminal-header:active {
+  cursor: grabbing;
+}
+
+.terminal-controls {
+  display: flex;
+  gap: 8px;
+}
+
+.terminal-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.terminal-dot.close { background: #ef4444; cursor: pointer; }
+.terminal-dot.minimize { background: #eab308; }
+.terminal-dot.maximize { background: #22c55e; }
+
+.terminal-title {
+  flex-grow: 1;
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--white-muted);
+  letter-spacing: 1px;
+  margin-right: 60px; /* offset the controls width to center title */
+}
+
+/* --- Terminal Body & Output Area --- */
+.terminal-body {
+  flex-grow: 1;
+  padding: 16px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: #e2e8f0;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(74, 246, 38, 0.2) transparent;
+}
+
+.terminal-body::-webkit-scrollbar {
+  width: 6px;
+}
+
+.terminal-body::-webkit-scrollbar-thumb {
+  background: rgba(74, 246, 38, 0.2);
+  border-radius: 4px;
+}
+
+.terminal-welcome {
+  color: var(--term-green);
+  border-bottom: 1px dashed rgba(74, 246, 38, 0.2);
+  padding-bottom: 8px;
+  margin-bottom: 8px;
+}
+
+.terminal-line {
+  word-break: break-word;
+  white-space: pre-wrap;
+}
+
+.terminal-input-prompt {
+  color: var(--term-green);
+  font-weight: bold;
+}
+
+.terminal-command-echo {
+  color: #fff;
+  font-weight: 500;
+}
+
+.terminal-response {
+  color: #cbd5e1;
+}
+
+.terminal-response .highlight {
+  color: var(--gold-400);
+}
+
+.terminal-response .success {
+  color: #4ade80;
+}
+
+/* --- Input Area --- */
+.terminal-input-wrapper {
+  display: flex;
+  align-items: center;
+  background: rgba(5, 8, 16, 0.5);
+  padding: 12px 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.terminal-input-prefix {
+  color: var(--term-green);
+  margin-right: 8px;
+  font-weight: bold;
+  font-size: 0.82rem;
+}
+
+.terminal-input-field {
+  flex-grow: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #fff;
+  font-family: var(--term-font);
+  font-size: 0.82rem;
+  padding: 0;
+  caret-color: var(--term-green);
+}
+
+/* --- Responsive Adjustments --- */
+@media (max-width: 480px) {
+  .terminal-container {
+    width: calc(100% - 32px);
+    height: 400px;
+    bottom: 88px;
+    right: 16px;
+  }
+  .terminal-launcher {
+    bottom: 16px;
+    right: 16px;
+  }
+}
