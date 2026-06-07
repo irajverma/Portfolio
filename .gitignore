@@ -1,0 +1,5 @@
+# Local IDE / Antigravity files
+.gemini/
+.system_generated/
+.tempmediaStorage/
+*.log
