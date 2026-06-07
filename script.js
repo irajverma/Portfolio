@@ -834,9 +834,8 @@ document.addEventListener('DOMContentLoaded', () => {
       return `AI Agent: I'm not fully sure how to answer that in offline mode. Try asking about my **education**, **internship**, **skills**, **projects**, or **leadership**! You can also type <span class="highlight">help</span> to see console commands.`;
     }
 
-    // Call Gemini API directly
+    // Call Gemini API directly with model/endpoint retries
     async function callGeminiAPI(query, apiKey) {
-      const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
       const systemPrompt = `You are the Terminal AI Agent representing Raj Verma on his portfolio website. Answer the user's question about Raj Verma concisely (1-3 sentences maximum) in plain text (no markdown, but you can use standard spacing). Use only the provided context. If the answer is not in the context, say "I don't have information on that, but you can ask about Raj's education, skills, projects, or work experience!"
 
 Context:
@@ -850,27 +849,45 @@ Context:
 
 User Question: "${query}"`;
 
-      const res = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          contents: [{
-            parts: [{
-              text: systemPrompt
-            }]
-          }]
-        })
-      });
+      const endpoints = [
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+        `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`
+      ];
 
-      if (!res.ok) {
-        const errData = await res.json();
-        throw new Error(errData.error?.message || 'Gemini API Error');
+      let lastError = null;
+
+      for (const url of endpoints) {
+        try {
+          const res = await fetch(url, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              contents: [{
+                parts: [{
+                  text: systemPrompt
+                }]
+              }]
+            })
+          });
+
+          if (res.ok) {
+            const data = await res.json();
+            if (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0]) {
+              return data.candidates[0].content.parts[0].text;
+            }
+          } else {
+            const errData = await res.json();
+            lastError = new Error(errData.error?.message || `HTTP ${res.status}`);
+          }
+        } catch (err) {
+          lastError = err;
+        }
       }
 
-      const data = await res.json();
-      return data.candidates[0].content.parts[0].text;
+      throw lastError || new Error('Failed to contact Gemini API');
     }
 
     // Handle command execution
