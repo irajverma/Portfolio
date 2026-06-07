@@ -849,17 +849,19 @@ Context:
 
 User Question: "${query}"`;
 
-      const endpoints = [
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
-        `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`
+      const attempts = [
+        { desc: 'v1beta gemini-1.5-flash', url: `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}` },
+        { desc: 'v1 gemini-1.5-flash', url: `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${apiKey}` },
+        { desc: 'v1beta gemini-1.5-flash-latest', url: `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}` },
+        { desc: 'v1beta gemini-2.0-flash-exp', url: `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${apiKey}` },
+        { desc: 'v1beta gemini-pro', url: `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}` }
       ];
 
-      let lastError = null;
+      const errors = [];
 
-      for (const url of endpoints) {
+      for (const attempt of attempts) {
         try {
-          const res = await fetch(url, {
+          const res = await fetch(attempt.url, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'
@@ -880,14 +882,14 @@ User Question: "${query}"`;
             }
           } else {
             const errData = await res.json();
-            lastError = new Error(errData.error?.message || `HTTP ${res.status}`);
+            errors.push(`${attempt.desc}: ${errData.error?.message || `HTTP ${res.status}`}`);
           }
         } catch (err) {
-          lastError = err;
+          errors.push(`${attempt.desc}: ${err.message}`);
         }
       }
 
-      throw lastError || new Error('Failed to contact Gemini API');
+      throw new Error(`All Gemini API attempts failed:<br>` + errors.map(e => `• ${e}`).join('<br>'));
     }
 
     // Handle command execution
