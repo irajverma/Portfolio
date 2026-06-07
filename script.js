@@ -609,6 +609,26 @@ document.addEventListener('DOMContentLoaded', () => {
     let commandHistory = [];
     let historyIndex = -1;
 
+    // Initialize/Update Welcome Banner
+    function updateWelcomeBanner() {
+      const apiKey = localStorage.getItem('gemini_api_key');
+      const banner = terminalBody.querySelector('.terminal-welcome');
+      if (banner) {
+        let statusText = '';
+        if (apiKey) {
+          statusText = `<p class="success">[Active Agent Mode: Google Gemini 1.5 Flash LLM Connected]</p>`;
+        } else {
+          statusText = `<p class="success">[Offline Mode. Type '<span class="highlight">setkey YOUR_GEMINI_API_KEY</span>' to activate live Gemini AI chat agent]</p>`;
+        }
+        banner.innerHTML = `
+          <p>Welcome to Raj Verma's Terminal Agent v1.0.0</p>
+          <p>Type <span class="highlight">help</span> to view all commands, or ask any question about Raj.</p>
+          ${statusText}
+        `;
+      }
+    }
+    updateWelcomeBanner();
+
     // Toggle terminal visibility
     terminalLauncher.addEventListener('click', () => {
       terminalContainer.classList.toggle('open');
@@ -651,6 +671,9 @@ document.addEventListener('DOMContentLoaded', () => {
         - <span class="highlight">skills</span>: List key technologies<br>
         - <span class="highlight">projects</span>: View featured creations<br>
         - <span class="highlight">contact</span>: Get contact channels<br>
+        - <span class="highlight">setkey &lt;key&gt;</span>: Save your Gemini API key for live AI chat<br>
+        - <span class="highlight">showkey</span>: Show current key mask<br>
+        - <span class="highlight">removekey</span>: Delete the saved API key<br>
         - <span class="highlight">clear</span>: Clear terminal screen`;
       }
       if (q === 'ls') {
@@ -676,6 +699,29 @@ document.addEventListener('DOMContentLoaded', () => {
         - <span class="highlight">Phone:</span> +91-9807486339<br>
         - <span class="highlight">GitHub:</span> github.com/irajverma<br>
         - <span class="highlight">LinkedIn:</span> linkedin.com/in/raj-verma-459320232`;
+      }
+
+      // API Key Commands
+      if (q.startsWith('setkey ')) {
+        const key = query.substring(7).trim();
+        if (key) {
+          localStorage.setItem('gemini_api_key', key);
+          updateWelcomeBanner();
+          return `<span class="success">Success:</span> Gemini API key saved! Live AI chatbot is now active.`;
+        }
+        return `Error: key cannot be empty. Usage: setkey YOUR_KEY`;
+      }
+      if (q === 'showkey') {
+        const key = localStorage.getItem('gemini_api_key');
+        if (key) {
+          return `Saved Key: ${key.substring(0, 8)}...${key.substring(key.length - 4)}`;
+        }
+        return `No Gemini API key is currently saved.`;
+      }
+      if (q === 'removekey') {
+        localStorage.removeItem('gemini_api_key');
+        updateWelcomeBanner();
+        return `<span class="success">Success:</span> Gemini API key removed. Switched back to local offline mode.`;
       }
 
       // Keyword mapping for natural questions
@@ -710,6 +756,45 @@ document.addEventListener('DOMContentLoaded', () => {
       Try asking about his <span class="highlight">internship</span>, <span class="highlight">college</span>, <span class="highlight">GPA</span>, <span class="highlight">hackathons</span>, or type <span class="highlight">help</span> to list console commands.`;
     }
 
+    // Call Gemini API directly
+    async function callGeminiAPI(query, apiKey) {
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+      const systemPrompt = `You are the Terminal AI Agent representing Raj Verma on his portfolio website. Answer the user's question about Raj Verma concisely (1-3 sentences maximum) in plain text (no markdown, but you can use standard spacing). Use only the provided context. If the answer is not in the context, say "I don't have information on that, but you can ask about Raj's education, skills, projects, or work experience!"
+
+Context:
+- Raj studies Computer Science Engineering (AI & ML) at VIT Bhopal University (GPA: 8.96, expected graduation 2027).
+- Currently a Software Engineering Intern at FOSSEE, IIT Bombay (working on the Osdag structural engineering project, built the Life Cycle Cost Assessment (LCCA) module using Python and SQLite).
+- Finished in Top 10 at NIT Jalandhar's HackMol 6.0 hackathon.
+- Leader: NCC Air Wing Captain, Placement Coordinator, Insights Club co-leader.
+- Projects: Wave Academy (school portal serving 1500+ students, Supabase + Firebase), Code Reviewer AI (powered by Google Gemini API).
+- Tech Skills: Python, JavaScript, Java, C++, React, Node, FastAPI, AWS, SQL, MongoDB, Supabase.
+- Contact: Email i.rajverma8423@gmail.com, Phone +91-9807486339.
+
+User Question: "${query}"`;
+
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          contents: [{
+            parts: [{
+              text: systemPrompt
+            }]
+          }]
+        })
+      });
+
+      if (!res.ok) {
+        const errData = await res.json();
+        throw new Error(errData.error?.message || 'Gemini API Error');
+      }
+
+      const data = await res.json();
+      return data.candidates[0].content.parts[0].text;
+    }
+
     // Handle command execution
     function executeCommand(cmdText) {
       const trimmed = cmdText.trim();
@@ -728,9 +813,10 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
 
-      const localCommands = ['help', 'ls', 'about', 'skills', 'projects', 'contact', 'clear'];
+      const localCommands = ['help', 'ls', 'about', 'skills', 'projects', 'contact', 'clear', 'showkey', 'removekey'];
       const isCatCommand = trimmed.toLowerCase().startsWith('cat ');
-      const isLocal = localCommands.includes(trimmed.toLowerCase()) || isCatCommand;
+      const isSetKeyCommand = trimmed.toLowerCase().startsWith('setkey ');
+      const isLocal = localCommands.includes(trimmed.toLowerCase()) || isCatCommand || isSetKeyCommand;
 
       if (isLocal) {
         // Run local response engine immediately
@@ -744,39 +830,33 @@ document.addEventListener('DOMContentLoaded', () => {
           appendTerminalLine(response, 'terminal-response');
         }, 300 + Math.random() * 200);
       } else {
-        // Natural language query: Call Puter.js free AI model!
-        appendTerminalLine(`Connecting to Puter AI Agent...`, 'terminal-response processing-text');
-        const processingLines = terminalBody.querySelectorAll('.processing-text');
-        const lastProcessingLine = processingLines[processingLines.length - 1];
+        // Natural language query: check if Gemini API key exists
+        const apiKey = localStorage.getItem('gemini_api_key');
 
-        if (window.puter && window.puter.ai) {
-          const systemPrompt = `You are the Terminal AI Agent representing Raj Verma on his portfolio website. Answer the user's question about Raj Verma concisely (1-3 sentences maximum) in plain text. Use only the provided context. If the answer is not in the context, say "I don't have information on that, but you can ask about Raj's education, skills, projects, or work experience!"
+        if (apiKey) {
+          appendTerminalLine(`Querying Gemini LLM...`, 'terminal-response processing-text');
+          const processingLines = terminalBody.querySelectorAll('.processing-text');
+          const lastProcessingLine = processingLines[processingLines.length - 1];
 
-Context:
-- Raj studies Computer Science Engineering (AI & ML) at VIT Bhopal University (GPA: 8.96, expected graduation 2027).
-- Currently a Software Engineering Intern at FOSSEE, IIT Bombay (working on the Osdag structural engineering project, built the Life Cycle Cost Assessment (LCCA) module using Python and SQLite).
-- Finished in Top 10 at NIT Jalandhar's HackMol 6.0 hackathon.
-- Leader: NCC Air Wing Captain, Placement Coordinator, Insights Club co-leader.
-- Projects: Wave Academy (school portal serving 1500+ students, Supabase + Firebase), Code Reviewer AI (powered by Google Gemini API).
-- Tech Skills: Python, JavaScript, Java, C++, React, Node, FastAPI, AWS, SQL, MongoDB, Supabase.
-- Contact: Email i.rajverma8423@gmail.com, Phone +91-9807486339.
-
-User Question: "${trimmed}"`;
-
-          window.puter.ai.chat(systemPrompt)
+          callGeminiAPI(trimmed, apiKey)
             .then((response) => {
               if (lastProcessingLine) lastProcessingLine.remove();
-              appendTerminalLine(`<span class="success">AI Agent:</span> ${escapeHtml(response)}`, 'terminal-response');
+              appendTerminalLine(`<span class="success">Gemini AI Agent:</span> ${escapeHtml(response)}`, 'terminal-response');
             })
             .catch((err) => {
               console.error(err);
               if (lastProcessingLine) lastProcessingLine.remove();
+              appendTerminalLine(`<span class="danger">Error:</span> Failed to contact Gemini. ${err.message}. Falling back...`, 'terminal-response');
               // Fallback to local offline engine
               const response = getAIResponse(trimmed);
               appendTerminalLine(response, 'terminal-response');
             });
         } else {
-          // Fallback offline engine if puter not loaded
+          // If no key, default to local keywords
+          appendTerminalLine(`Processing offline query...`, 'terminal-response processing-text');
+          const processingLines = terminalBody.querySelectorAll('.processing-text');
+          const lastProcessingLine = processingLines[processingLines.length - 1];
+
           setTimeout(() => {
             if (lastProcessingLine) lastProcessingLine.remove();
             const response = getAIResponse(trimmed);
