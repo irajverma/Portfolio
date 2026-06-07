@@ -724,36 +724,85 @@ document.addEventListener('DOMContentLoaded', () => {
         return `<span class="success">Success:</span> Gemini API key removed. Switched back to local offline mode.`;
       }
 
-      // Keyword mapping for natural questions
-      if (q.includes('college') || q.includes('university') || q.includes('study') || q.includes('vit') || q.includes('bhopal')) {
-        return `Raj studies at <span class="highlight">VIT Bhopal University</span>. He is pursuing a B.Tech in Computer Science Engineering (specialising in Artificial Intelligence & Machine Learning).`;
-      }
-      if (q.includes('intern') || q.includes('work') || q.includes('experience') || q.includes('iit') || q.includes('bombay') || q.includes('fossee') || q.includes('osdag') || q.includes('lcca')) {
-        return `Raj is a Software Engineering Intern at <span class="success">FOSSEE, IIT Bombay</span>. He works on the Osdag project, where he successfully implemented the Life Cycle Cost Assessment (LCCA) module using Python and SQLite.`;
-      }
-      if (q.includes('hackathon') || q.includes('hackmol') || q.includes('jalandhar') || q.includes('nit')) {
-        return `Raj was a <span class="highlight">Top 10 Finalist</span> at HackMol 6.0, a national-level hackathon at NIT Jalandhar, competing against hundreds of teams.`;
-      }
-      if (q.includes('gpa') || q.includes('cgpa') || q.includes('grade') || q.includes('pointer')) {
-        return `Raj maintains an excellent academic record with a cumulative GPA of <span class="highlight">8.96</span> at VIT Bhopal.`;
-      }
-      if (q.includes('certificate') || q.includes('certifications') || q.includes('credential')) {
-        return `Raj holds credentials including:<br>
-        - <span class="highlight">Google IT Support</span> Professional Certificate<br>
-        - <span class="highlight">MERN Full Stack</span> Certification (Ethnus)<br>
-        - <span class="highlight">Applied Machine Learning in Python</span> (University of Michigan/Coursera)<br>
-        - <span class="highlight">Deloitte Job Simulation</span> Certificate`;
-      }
-      if (q.includes('resume') || q.includes('cv')) {
-        return `You can download Raj's resume directly using the golden <span class="highlight">Download Resume</span> button in the home screen, or access it at <a href="ResumeRajVerma.pdf" download class="highlight">ResumeRajVerma.pdf</a>.`;
-      }
-      if (q.includes('ncc') || q.includes('captain') || q.includes('air wing')) {
-        return `Raj holds the captaincy in the <span class="highlight">NCC Air Wing</span>, showcasing leadership and discipline alongside his engineering skills.`;
+      // Natural language mapping using Jaccard Similarity / overlap
+      const intents = [
+        {
+          id: 'education',
+          triggers: ['college', 'university', 'study', 'vit', 'bhopal', 'cgpa', 'gpa', 'grade', 'school', 'degree', 'btech', 'education', 'studying', 'scores'],
+          response: `Raj studies at <span class="highlight">VIT Bhopal University</span>. He is pursuing a B.Tech in Computer Science (AI & ML) with a cumulative GPA of <span class="highlight">8.96</span>.`
+        },
+        {
+          id: 'internship',
+          triggers: ['intern', 'internship', 'work', 'experience', 'iit', 'bombay', 'fossee', 'osdag', 'lcca', 'job', 'project', 'industry'],
+          response: `Raj is a Software Engineering Intern at <span class="success">FOSSEE, IIT Bombay</span>. He engineered the Life Cycle Cost Assessment (LCCA) module for the open-source software Osdag using Python and SQLite.`
+        },
+        {
+          id: 'hackathon',
+          triggers: ['hackathon', 'hackmol', 'jalandhar', 'nit', 'competition', 'placement', 'screening', 'contest', 'coding'],
+          response: `Raj finished in the <span class="highlight">Top 10 Finalists</span> at HackMol 6.0 (NIT Jalandhar) and was a top performer out of 423+ students in the placement coding screening.`
+        },
+        {
+          id: 'projects',
+          triggers: ['project', 'projects', 'build', 'wave', 'academy', 'code', 'reviewer', 'ai', 'supabase', 'firebase', 'gemini'],
+          response: `Featured Projects:<br>
+          1. <span class="highlight">Wave Academy:</span> School portal serving 1500+ active students (React, TS, Supabase, Firebase).<br>
+          2. <span class="highlight">Code Reviewer AI:</span> Code review tool powered by Google Gemini API.`
+        },
+        {
+          id: 'skills',
+          triggers: ['skills', 'skill', 'tech', 'languages', 'python', 'javascript', 'react', 'aws', 'sql', 'frameworks', 'java', 'c++', 'tools'],
+          response: `Raj's Technical Stack:<br>
+          - <span class="highlight">Languages:</span> Python, JavaScript, Java, C++, HTML/CSS<br>
+          - <span class="highlight">Frameworks:</span> React, Node.js, Express, FastAPI, PyQt, scikit-learn<br>
+          - <span class="highlight">Cloud/DB:</span> AWS, SQL/SQLite, MongoDB, Supabase, Firebase`
+        },
+        {
+          id: 'contact',
+          triggers: ['contact', 'email', 'phone', 'call', 'reach', 'github', 'linkedin', 'gmail', 'social', 'address'],
+          response: `Reach out to Raj Verma:<br>
+          - <span class="highlight">Email:</span> i.rajverma8423@gmail.com<br>
+          - <span class="highlight">Phone:</span> +91-9807486339<br>
+          - <span class="highlight">GitHub:</span> github.com/irajverma<br>
+          - <span class="highlight">LinkedIn:</span> linkedin.com/in/raj-verma-459320232`
+        },
+        {
+          id: 'ncc',
+          triggers: ['ncc', 'captain', 'leader', 'leadership', 'air', 'wing', 'club', 'insights'],
+          response: `Raj holds leadership credentials as an <span class="highlight">NCC Air Wing Captain</span>, co-leader of the Insights Club (conducting AI workshops for 200+ students), and VIT Placement Coordinator.`
+        },
+        {
+          id: 'suitability',
+          triggers: ['why', 'hire', 'good', 'role', 'recruit', 'fit', 'suit', 'job', 'ai', 'developer', 'quality', 'strengths'],
+          response: `Raj is an exceptional candidate for AI/ML and Software Engineering roles. He bridges academic excellence (B.Tech AI/ML, 8.96 GPA) with solid industry contributions (IIT Bombay internship) and leadership (NCC Captain).`
+        }
+      ];
+
+      // Calculate Jaccard similarity between query tokens and intent triggers
+      let bestIntent = null;
+      let maxScore = 0;
+
+      const queryTokens = q.replace(/[^\w\s]/g, '').split(/\s+/);
+
+      intents.forEach(intent => {
+        let matches = 0;
+        queryTokens.forEach(token => {
+          if (intent.triggers.includes(token) || intent.triggers.some(trig => token.startsWith(trig) || trig.startsWith(token))) {
+            matches++;
+          }
+        });
+        const score = matches / (queryTokens.length + intent.triggers.length - matches);
+        if (score > maxScore) {
+          maxScore = score;
+          bestIntent = intent;
+        }
+      });
+
+      if (bestIntent && maxScore > 0.02) {
+        return `AI Agent: ${bestIntent.response}`;
       }
 
-      // Default fallback
-      return `AI Agent: I'm not fully sure about "${query}".<br>
-      Try asking about his <span class="highlight">internship</span>, <span class="highlight">college</span>, <span class="highlight">GPA</span>, <span class="highlight">hackathons</span>, or type <span class="highlight">help</span> to list console commands.`;
+      // Default intelligent fallback
+      return `AI Agent: Raj Verma is a B.Tech Computer Science (AI & ML) student and Software Engineering Intern at IIT Bombay. You can ask me about his **education**, **internship**, **skills**, **projects**, or **leadership**!`;
     }
 
     // Call Gemini API directly
