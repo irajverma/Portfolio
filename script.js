@@ -728,16 +728,62 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
 
-      // Simulated processing latency
-      appendTerminalLine(`Processing query...`, 'terminal-response processing-text');
-      const processingLines = terminalBody.querySelectorAll('.processing-text');
-      const lastProcessingLine = processingLines[processingLines.length - 1];
+      const localCommands = ['help', 'ls', 'about', 'skills', 'projects', 'contact', 'clear'];
+      const isCatCommand = trimmed.toLowerCase().startsWith('cat ');
+      const isLocal = localCommands.includes(trimmed.toLowerCase()) || isCatCommand;
 
-      setTimeout(() => {
-        if (lastProcessingLine) lastProcessingLine.remove();
-        const response = getAIResponse(trimmed);
-        appendTerminalLine(response, 'terminal-response');
-      }, 350 + Math.random() * 200);
+      if (isLocal) {
+        // Run local response engine immediately
+        appendTerminalLine(`Processing command...`, 'terminal-response processing-text');
+        const processingLines = terminalBody.querySelectorAll('.processing-text');
+        const lastProcessingLine = processingLines[processingLines.length - 1];
+
+        setTimeout(() => {
+          if (lastProcessingLine) lastProcessingLine.remove();
+          const response = getAIResponse(trimmed);
+          appendTerminalLine(response, 'terminal-response');
+        }, 300 + Math.random() * 200);
+      } else {
+        // Natural language query: Call Puter.js free AI model!
+        appendTerminalLine(`Connecting to Puter AI Agent...`, 'terminal-response processing-text');
+        const processingLines = terminalBody.querySelectorAll('.processing-text');
+        const lastProcessingLine = processingLines[processingLines.length - 1];
+
+        if (window.puter && window.puter.ai) {
+          const systemPrompt = `You are the Terminal AI Agent representing Raj Verma on his portfolio website. Answer the user's question about Raj Verma concisely (1-3 sentences maximum) in plain text. Use only the provided context. If the answer is not in the context, say "I don't have information on that, but you can ask about Raj's education, skills, projects, or work experience!"
+
+Context:
+- Raj studies Computer Science Engineering (AI & ML) at VIT Bhopal University (GPA: 8.96, expected graduation 2027).
+- Currently a Software Engineering Intern at FOSSEE, IIT Bombay (working on the Osdag structural engineering project, built the Life Cycle Cost Assessment (LCCA) module using Python and SQLite).
+- Finished in Top 10 at NIT Jalandhar's HackMol 6.0 hackathon.
+- Leader: NCC Air Wing Captain, Placement Coordinator, Insights Club co-leader.
+- Projects: Wave Academy (school portal serving 1500+ students, Supabase + Firebase), Code Reviewer AI (powered by Google Gemini API).
+- Tech Skills: Python, JavaScript, Java, C++, React, Node, FastAPI, AWS, SQL, MongoDB, Supabase.
+- Contact: Email i.rajverma8423@gmail.com, Phone +91-9807486339.
+
+User Question: "${trimmed}"`;
+
+          window.puter.ai.chat(systemPrompt)
+            .then((response) => {
+              if (lastProcessingLine) lastProcessingLine.remove();
+              appendTerminalLine(`<span class="success">AI Agent:</span> ${escapeHtml(response)}`, 'terminal-response');
+            })
+            .catch((err) => {
+              console.error(err);
+              if (lastProcessingLine) lastProcessingLine.remove();
+              // Fallback to local offline engine
+              const response = getAIResponse(trimmed);
+              appendTerminalLine(response, 'terminal-response');
+            });
+        } else {
+          // Fallback offline engine if puter not loaded
+          setTimeout(() => {
+            if (lastProcessingLine) lastProcessingLine.remove();
+            const response = getAIResponse(trimmed);
+            appendTerminalLine(response, 'terminal-response');
+          }, 350 + Math.random() * 200);
+        }
+      }
     }
 
     // Helper to escape HTML tags in echo
