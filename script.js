@@ -850,6 +850,10 @@ Context:
 User Question: "${query}"`;
 
       const attempts = [
+        { desc: 'v1beta gemini-2.5-flash', url: `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}` },
+        { desc: 'v1 gemini-2.5-flash', url: `https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key=${apiKey}` },
+        { desc: 'v1beta gemini-2.5-pro', url: `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-pro:generateContent?key=${apiKey}` },
+        { desc: 'v1 gemini-2.5-pro', url: `https://generativelanguage.googleapis.com/v1/models/gemini-2.5-pro:generateContent?key=${apiKey}` },
         { desc: 'v1beta gemini-1.5-flash', url: `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}` },
         { desc: 'v1 gemini-1.5-flash', url: `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${apiKey}` },
         { desc: 'v1beta gemini-1.5-flash-latest', url: `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}` },
