@@ -809,7 +809,13 @@ document.addEventListener('DOMContentLoaded', () => {
       intents.forEach(intent => {
         let matches = 0;
         queryTokens.forEach(token => {
-          if (intent.triggers.includes(token) || intent.triggers.some(trig => token.startsWith(trig) || trig.startsWith(token))) {
+          const isMatch = intent.triggers.some(trig => {
+            if (trig.length <= 3) {
+              return token === trig;
+            }
+            return token.startsWith(trig) || trig.startsWith(token);
+          });
+          if (isMatch) {
             matches++;
           }
         });
