@@ -16,6 +16,39 @@
   --term-input-bg: rgba(5, 8, 16, 0.5);
 }
 
+/* --- Theme Overrides --- */
+html[data-theme="dark-emerald"] {
+  --term-bg: rgba(10, 31, 26, 0.95);
+  --term-green: #10b981;
+  --term-green-dim: #059669;
+  --term-border: rgba(16, 185, 129, 0.15);
+  --term-border-hover: rgba(16, 185, 129, 0.35);
+  --term-header-bg: rgba(15, 40, 35, 0.8);
+  --term-input-bg: rgba(5, 20, 15, 0.5);
+}
+
+html[data-theme="dark-purple"] {
+  --term-bg: rgba(26, 10, 46, 0.95);
+  --term-green: #a855f7;
+  --term-green-dim: #9333ea;
+  --term-border: rgba(168, 85, 247, 0.15);
+  --term-border-hover: rgba(168, 85, 247, 0.35);
+  --term-header-bg: rgba(40, 15, 60, 0.8);
+  --term-input-bg: rgba(15, 5, 30, 0.5);
+}
+
+html[data-theme="light-mode"] {
+  --term-bg: rgba(248, 250, 252, 0.95);
+  --term-green: #1e3a5f;
+  --term-green-dim: #0f172a;
+  --term-border: rgba(30, 58, 95, 0.15);
+  --term-border-hover: rgba(30, 58, 95, 0.35);
+  --term-header-bg: rgba(226, 232, 240, 0.8);
+  --term-input-bg: rgba(241, 245, 249, 0.5);
+  --term-text: #334155;
+  --term-text-bright: #0f172a;
+}
+
 /* --- Floating Terminal Toggle Button --- */
 .terminal-launcher {
   position: fixed;
