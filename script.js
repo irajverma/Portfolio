@@ -697,7 +697,7 @@ document.addEventListener('DOMContentLoaded', () => {
         - <span class="highlight">Email:</span> i.rajverma8423@gmail.com<br>
         - <span class="highlight">Phone:</span> +91-9807486339<br>
         - <span class="highlight">GitHub:</span> github.com/irajverma<br>
-        - <span class="highlight">LinkedIn:</span> linkedin.com/in/raj-verma-459320232`;
+        - <span class="highlight">LinkedIn:</span> linkedin.com/in/i-rajverma`;
       }
 
       // API Key Commands
@@ -787,7 +787,7 @@ document.addEventListener('DOMContentLoaded', () => {
           - <span class="highlight">Email:</span> i.rajverma8423@gmail.com<br>
           - <span class="highlight">Phone:</span> +91-9807486339<br>
           - <span class="highlight">GitHub:</span> github.com/irajverma<br>
-          - <span class="highlight">LinkedIn:</span> linkedin.com/in/raj-verma-459320232`
+          - <span class="highlight">LinkedIn:</span> linkedin.com/in/i-rajverma`
         },
         {
           id: 'ncc',
@@ -847,7 +847,7 @@ Guidelines:
 
 Context:
 Name: Raj Verma
-Contact: Phone: +91-9807486339 | Email: i.rajverma8423@gmail.com | GitHub: github.com/irajverma | LinkedIn: linkedin.com/in/raj-verma-459320232
+Contact: Phone: +91-9807486339 | Email: i.rajverma8423@gmail.com | GitHub: github.com/irajverma | LinkedIn: linkedin.com/in/i-rajverma
 
 Education:
 - VIT Bhopal University: B.Tech in Computer Science (AI & ML), GPA: 8.96 (2023 - Present)
